@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Resilient App</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #f0f0f0;
+      flex-direction: column;
+    }
+    .container {
+      text-align: center;
+    }
+    #clock {
+      font-size: 48px;
+      margin-bottom: 20px;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      margin: 5px;
+    }
+
+    /* Outer progress container */
+    #progressBar {
+      width: 300px;
+      height: 20px;
+      margin-top: 20px;
+      display: none;
+      position: relative;
+      background-color: #e0e0e0;
+      border-radius: 5px;
+      overflow: hidden;
+    }
+
+    /* Inner animated bar */
+    #progressBar::before {
+  content: '';
+  position: absolute;
+  height: 100%;
+  width: 100px;
+  left: 0;
+  background-color: #4caf50;
+  animation: loading 1.2s linear infinite;
+}
+
+@keyframes loading {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(300px); }
+}
+
+
+    #successMessage {
+      display: none;
+      color: green;
+      font-size: 18px;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div id="clock"></div>
+    <button onclick="startTask()">Start Background Task</button>
+    <div id="progressBar"></div>
+    <div id="successMessage">Task completed successfully!</div>
+  </div>
+
+  <script>
+    const { ipcRenderer } = require('electron');
+
+    function updateClock() {
+      document.getElementById('clock').textContent = new Date().toLocaleTimeString();
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    function startTask() {
+      const progressBar = document.getElementById('progressBar');
+      const successMessage = document.getElementById('successMessage');
+
+      progressBar.style.display = 'block';
+      successMessage.style.display = 'none';
+
+      ipcRenderer.send('start-background-task');
+    }
+
+    ipcRenderer.on('task-started', () => {
+      const progressBar = document.getElementById('progressBar');
+      const successMessage = document.getElementById('successMessage');
+
+      progressBar.style.display = 'block';
+      successMessage.style.display = 'none';
+
+      ipcRenderer.once('task-finished', () => {
+        progressBar.style.display = 'none';
+        successMessage.style.display = 'block';
+      });
+    });
+  </script>
+</body>
+</html>
