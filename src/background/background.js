@@ -1,8 +1,8 @@
 const fs = require('fs');
 const path = require('path');
 
-const logDir = path.join('C:', 'Users', 'Priyank', 'resilient-app-logs');
-const logFile = path.join(logDir, 'task.log');
+const logDir = 'C:\\resilient-app-logs';
+const logFile = 'C:\\resilient-app-logs.task.log';
 const fallbackLogFile = path.join(__dirname, 'task-fallback.log');
 
 function writeToLog(message) {
@@ -11,9 +11,7 @@ function writeToLog(message) {
   } catch (err) {
     try {
       fs.appendFileSync(fallbackLogFile, message, 'utf8');
-    } catch (fallbackErr) {
-      // Silently fail in production
-    }
+    } catch (fallbackErr) {}
   }
 }
 
@@ -27,7 +25,7 @@ function isPrime(n) {
 
 function findLargePrime(callback) {
   let num = 1000000000;
-  const targetDuration = 3045 * 1000; // Minimum duration in milliseconds
+  const targetDuration = 3045 * 1000;
   const startTime = Date.now();
   let primeFound = false;
 
@@ -41,7 +39,7 @@ function findLargePrime(callback) {
       callback();
     } else {
       num += 2;
-      setImmediate(checkPrime); // Use setImmediate to avoid blocking the event loop
+      setImmediate(checkPrime); 
     }
   }
 

@@ -14,11 +14,10 @@ if (!gotTheLock) {
 let mainWindow;
 
 // Log file path
-const logDir = path.join('C:', 'Users', 'Priyank', 'resilient-app-logs');
-const logFile = path.join(logDir, 'task.log');
+const logDir = 'C:\\resilient-app-logs';
+const logFile = 'C:\\resilient-app-logs.task.log';
 const fallbackLogFile = path.join(__dirname, 'task-fallback.log');
 
-// Ensure log directory exists
 try {
   if (!fs.existsSync(logDir)) {
     fs.mkdirSync(logDir, { recursive: true });
@@ -27,11 +26,10 @@ try {
   try {
     fs.appendFileSync(fallbackLogFile, `[${new Date().toISOString()}] Failed to create log directory: ${err.message}\n`, 'utf8');
   } catch (fallbackErr) {
-    // Silently fail in production
+
   }
 }
 
-// Function to write to log file with error handling
 function writeToLog(message) {
   try {
     fs.appendFileSync(logFile, message, 'utf8');
@@ -39,7 +37,7 @@ function writeToLog(message) {
     try {
       fs.appendFileSync(fallbackLogFile, message, 'utf8');
     } catch (fallbackErr) {
-      // Silently fail in production
+
     }
   }
 }
@@ -86,21 +84,21 @@ function setupAutoStart() {
     }
   } else if (os.platform() === 'darwin') {
     const plist = `<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-<dict>
-  <key>Label</key>
-  <string>com.${appName}.autostart</string>
-  <key>ProgramArguments</key>
-  <array>
-    <string>${appPath}</string>
-  </array>
-  <key>RunAtLoad</key>
-  <true/>
-  <key>KeepAlive</key>
-  <true/>
-</dict>
-</plist>`;
+                    <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+                    <plist version="1.0">
+                    <dict>
+                      <key>Label</key>
+                      <string>com.${appName}.autostart</string>
+                      <key>ProgramArguments</key>
+                      <array>
+                        <string>${appPath}</string>
+                      </array>
+                      <key>RunAtLoad</key>
+                      <true/>
+                      <key>KeepAlive</key>
+                      <true/>
+                    </dict>
+                    </plist>`;
     const plistPath = path.join(os.homedir(), `Library/LaunchAgents/com.${appName}.autostart.plist`);
     try {
       fs.writeFileSync(plistPath, plist);
@@ -114,16 +112,16 @@ function setupAutoStart() {
     }
   } else if (os.platform() === 'linux') {
     const service = `[Unit]
-Description=${appName} Auto Restart
-After=network.target
+                      Description=${appName} Auto Restart
+                      After=network.target
 
-[Service]
-ExecStart=${appPath}
-Restart=always
-RestartSec=3
+                      [Service]
+                      ExecStart=${appPath}
+                      Restart=always
+                      RestartSec=3
 
-[Install]
-WantedBy=multi-user.target`;
+                      [Install]
+                      WantedBy=multi-user.target`;
     const servicePath = path.join('/etc/systemd/system/', `${appName}.service`);
     try {
       fs.writeFileSync(servicePath, service);
@@ -132,9 +130,7 @@ WantedBy=multi-user.target`;
     } catch (err) {
       try {
         fs.appendFileSync(fallbackLogFile, `[${new Date().toISOString()}] Failed to set auto-start on Linux: ${err.message}\n`, 'utf8');
-      } catch (fallbackErr) {
-        // Silently fail in production
-      }
+      } catch (fallbackErr) {}
     }
   }
 }
@@ -150,9 +146,7 @@ function restartApp() {
   } catch (err) {
     try {
       fs.appendFileSync(fallbackLogFile, `[${new Date().toISOString()}] Failed to restart app: ${err.message}\n`, 'utf8');
-    } catch (fallbackErr) {
-      // Silently fail in production
-    }
+    } catch (fallbackErr) {}
   }
 }
 
@@ -209,7 +203,7 @@ ipcMain.on('start-background-task', () => {
   }
 });
 
-// Handle task completion (for backward compatibility)
+// Handle task completion 
 ipcMain.on('task-completed', () => {
   writeToLog(`[${new Date().toISOString()}] Task completed event received.\n`);
   mainWindow.webContents.send('task-finished');
