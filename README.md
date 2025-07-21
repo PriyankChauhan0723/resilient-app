@@ -10,7 +10,7 @@ An Electron-based application that restarts on close, runs a background task, an
 ### Installation
 1. Clone the repository or download the source code:
    ```bash
-   git clone https://github.com/yourusername/resilient-app.git
+   git clone https://github.com/PriyankChauhan0723/resilient-app.git
    cd resilient-app
    ```
 2. Install dependencies:
@@ -70,5 +70,4 @@ In all cases, the `restartApp` function uses `child_process.spawn` with a fallba
 
 ## Additional Notes
 - Logs are written to `~/resilient-app-logs/task.log` for monitoring task start and completion.
-- The app icon is set via `assets/icon.png` and included in the build.
 - Build output is stored in the `dist` directory.
