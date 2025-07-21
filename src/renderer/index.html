@@ -26,7 +26,6 @@
       cursor: pointer;
       margin: 5px;
     }
-
     #progressBar {
       width: 300px;
       height: 20px;
@@ -37,23 +36,19 @@
       border-radius: 5px;
       overflow: hidden;
     }
-
     #progressBar::before {
-  content: '';
-  position: absolute;
-  height: 100%;
-  width: 100px;
-  left: 0;
-  background-color: #4caf50;
-  animation: loading 1.2s linear infinite;
-}
-
-@keyframes loading {
-  0% { transform: translateX(-100%); }
-  100% { transform: translateX(300px); }
-}
-
-
+      content: '';
+      position: absolute;
+      height: 100%;
+      width: 100px;
+      left: 0;
+      background-color: #4caf50;
+      animation: loading 1.2s linear infinite;
+    }
+    @keyframes loading {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(300px); }
+    }
     #successMessage {
       display: none;
       color: green;
@@ -66,6 +61,7 @@
   <div class="container">
     <div id="clock"></div>
     <button onclick="startTask()">Start Background Task</button>
+    <button onclick="exitApp()">Exit App</button>
     <div id="progressBar"></div>
     <div id="successMessage">Task completed successfully!</div>
   </div>
@@ -87,6 +83,10 @@
       successMessage.style.display = 'none';
 
       ipcRenderer.send('start-background-task');
+    }
+
+    function exitApp() {
+      ipcRenderer.send('exit-app');
     }
 
     ipcRenderer.on('task-started', () => {

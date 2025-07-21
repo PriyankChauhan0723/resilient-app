@@ -1,6 +1,6 @@
 {
   "name": "resilient-app",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Electron app that restarts on kill and runs a heavy task in the background.",
   "author": "Priyank",
   "main": "src/main/main.js",
@@ -16,7 +16,8 @@
       "src/main/main.js",
       "src/background/background.js",
       "src/renderer/index.html",
-      "assets/**/*"
+      "assets/**/*",
+      "restart-monitor.js"
     ],
     "extraFiles": [
       {
@@ -42,5 +43,7 @@
     "electron": "^28.0.0",
     "electron-builder": "^24.0.0"
   },
-  "dependencies": {}
+  "dependencies": {
+    "node-schedule": "^2.1.1"
+  }
 }
